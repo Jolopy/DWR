@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Main Menu">
+        <menu>
+            <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/currentworkout"
+                android:icon="@android:drawable/btn_star_big_on"
+                android:title="Current Workout" />
+            <item
+                android:id="@+id/runningroutine"
+                android:icon="@android:drawable/ic_dialog_map"
+                android:title="Running Routine" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Workouts">
+        <menu>
+            <group android:checkableBehavior="single">
+            <item
+                    android:id="@+id/monday"
+                    android:icon="@android:drawable/stat_sys_upload"
+                    android:title="Monday" />
+                <item
+                    android:id="@+id/tuesday"
+                    android:icon="@android:drawable/stat_sys_upload"
+                    android:title="Tuesday" />
+                <item
+                    android:id="@+id/wednesday"
+                    android:icon="@android:drawable/stat_sys_upload"
+                    android:title="Wednesday" />
+                <item
+                    android:id="@+id/thursday"
+                    android:icon="@android:drawable/stat_sys_upload"
+                    android:title="Thursday" />
+                <item
+                    android:id="@+id/friday"
+                    android:icon="@android:drawable/stat_sys_upload"
+                    android:title="Friday" />
+                <item
+                    android:id="@+id/saturday"
+                    android:icon="@android:drawable/stat_sys_upload"
+                    android:title="Saturday" />
+                <item
+                    android:id="@+id/sunday"
+                    android:icon="@android:drawable/stat_sys_upload"
+                    android:title="Sunday" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

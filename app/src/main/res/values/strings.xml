@@ -6,4 +6,165 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="workouts">
+        <!--chest-->
+        <item>Barbell Bench Press</item>
+        <item>Flat Bench Dumbbell Press</item>
+        <item>Incline Barbell Bench Press</item>
+        <item>Incline Dumbbell Press</item>
+        <item>Dips</item>
+        <item>Reverse Cable Flys</item>
+        <item>Incline Dumbbell Pullover</item>
+        <item>Standing Cable Flys</item>
+
+        <!--biceps-->
+        <item>Incline Dumbbell hammer Curl</item>
+        <item>Incline Inner Bicep Curl</item>
+        <item>Seated Concentration Dumbbell Curl</item>
+        <item>Ez-bar Curl</item>
+        <item>Wide-Grip Standing Barbell Curl</item>
+        <item>Reverse-Grip Barbell Curl</item>
+        <item>Standing Dumbbell Biceps Curl</item>
+        <item>Hammer Curl</item>
+
+        <!--triceps-->
+        <item>Close-Grip Barbell Bench Press</item>
+        <item>Dip Machine</item>
+        <item>Ez-bar Skullcrusher</item>
+        <item>Tricep Pushdowns - Rope</item>
+        <item>Triceps Overhead Extension - Rope</item>
+        <item>Tricep Dumbbell KickBack</item>
+        <item>Standing Overhead Dumbbell Tricep Extension</item>
+        <item>Seated One-Arm Dumbbell Tricep Extension</item>
+
+        <!--Shoulders-->
+        <item>Dumbbell Shoulder Press</item>
+        <item>Arnold Dumbbell Press</item>
+        <item>Standing Barbell Press</item>
+        <item>Front Dumbbell Raises</item>
+        <item>Side Laterals</item>
+        <item>Upright Dumbell Rows</item>
+        <item>Reverse Flys</item>
+        <item>Dumbbell Shrugs</item>
+
+        <!--Abs-->
+        <item>Hanging Leg Raise or Knee Raise</item>
+        <item>Machine Crunch</item>
+        <item>Cable Pallof Press</item>
+        <item>Kneeling Cable Crunch</item>
+        <item>Decline Russian Twist w/ Weight</item>
+        <item>Ab-Wheel Roll-out</item>
+        <item>Plank</item>
+        <item>Crunches</item>
+
+        <!--Back-->
+        <item>Barbell Deadlift</item>
+        <item>Wide Grip Pull-Up</item>
+        <item>Standing T-Bar row</item>
+        <item>Seated Cable Row</item>
+        <item>Wide-Grip Bar Pulldown</item>
+        <item>Single Arm Dumbbell Row</item>
+        <item>Back Extensions</item>
+        <item>Close-Grip Pulldown</item>
+
+        <!--Legs-->
+        <item>Squat</item>
+        <item>Front Squat</item>
+        <item>Leg Press</item>
+        <item>Dumbbell Lunge</item>
+        <item>Calf Raises</item>
+        <item>Machine Squat</item>
+        <item>Leg Curls</item>
+        <item>Walking Lunge</item>
+        <item>Barbell Hip Thrust</item>
+        <item>Leg Extensions</item>
+        <item>Thigh Abductor</item>
+
+        <!--Carddio-->
+        <item>Elliptical</item>
+        <item>Running</item>
+        <item>Stair Climber</item>
+        <item>Jump Roping</item>
+        <item>KettleBells</item>
+        <item>Cycling</item>
+        <item>Swimming</item>
+        <item>Rowing</item>
+        <item>High-Intensity Interval Training</item>
+        <item>Sprinting</item>
+        <item>Boxing/Kick-Boxing</item>
+    </string-array>
+    <!--
+    <string name="workout1_1">Barbell Bench Press</string>
+    <string name="workout1_2">Flat Bench Dumbbell Press</string>
+    <string name="workout1_3">Incline Barbell Bench Press</string>
+    <string name="workout1_4">Incline Dumbbell Press</string>
+    <string name="workout1_5">Dips</string>
+    <string name="workout1_6">Reverse Cable Flys</string>
+    <string name="workout1_7">Incline Dumbbell Pullover</string>
+    <string name="workout1_8">Standing Cable Flys</string>
+    <string name="workout2_1">Incline Dumbbell hammer Curl</string>
+    <string name="workout2_2">Incline Inner Bicep Curl</string>
+    <string name="workout2_3">Seated Concentration Dumbbell Curl</string>
+    <string name="workout2_4">Ez-bar Curl</string>
+    <string name="workout2_5">Wide-Grip Standing Barbell Curl</string>
+    <string name="workout2_6">Reverse-Grip Barbell Curl</string>
+    <string name="workout2_7">Standing Dumbbell Biceps Curl</string>
+    <string name="workout2_8">Hammer Curl</string>
+    <string name="workout3_1">Close-Grip Barbell Bench Press</string>
+    <string name="workout3_2">Dip Machine</string>
+    <string name="workout3_3">Ez-bar Skullcrusher</string>
+    <string name="workout3_4">Tricep Pushdowns - Rope</string>
+    <string name="workout3_5">Triceps Overhead Extension - Rope</string>
+    <string name="workout3_6">Tricep Dumbbell KickBack</string>
+    <string name="workout3_7">Standing Overhead Dumbbell Tricep Extension</string>
+    <string name="workout3_8">Seated One-Arm Dumbbell Tricep Extension</string>
+    <string name="workout4_1">Dumbbell Shoulder Press</string>
+    <string name="workout4_2">Arnold Dumbbell Press</string>
+    <string name="workout4_3">Standing Barbell Press</string>
+    <string name="workout4_4">Front Dumbbell Raises</string>
+    <string name="workout4_5">Side Laterals</string>
+    <string name="workout4_6">Upright Dumbell Rows</string>
+    <string name="workout4_7">Reverse Flys</string>
+    <string name="workout4_8">Dumbbell Shrugs</string>
+    <string name="workout5_1">Hanging Leg Raise or Knee Raise</string>
+    <string name="workout5_2">Machine Crunch</string>
+    <string name="workout5_3">Cable Pallof Press</string>
+    <string name="workout5_4">Kneeling Cable Crunch</string>
+    <string name="workout5_5">Decline Russian Twist w/ Weight</string>
+    <string name="workout5_6">Ab-Wheel Roll-out</string>
+    <string name="workout5_7">Plank</string>
+    <string name="workout5_8">Crunches</string>
+    <string name="workout6_1">Barbell Deadlift</string>
+    <string name="workout6_2">Wide Grip Pull-Up</string>
+    <string name="workout6_3">Standing T-Bar row</string>
+    <string name="workout6_4">Seated Cable Row</string>
+    <string name="workout6_5">Wide-Grip Bar Pulldown</string>
+    <string name="workout6_6">Single Arm Dumbbell Row</string>
+    <string name="workout6_7">Back Extensions</string>
+    <string name="workout6_8">Close-Grip Pulldown</string>
+    <string name="workout7_1">Squat</string>
+    <string name="workout7_2">Front Squat</string>
+    <string name="workout7_3">Leg Press</string>
+    <string name="workout7_4">Dumbbell Lunge</string>
+    <string name="workout7_5">Calf Raises</string>
+    <string name="workout7_6">Machine Squat</string>
+    <string name="workout7_7">Leg Curls</string>
+    <string name="workout7_8">Walking Lunge</string>
+    <string name="workout7_9">Barbell Hip Thrust</string>
+    <string name="workout7_10">Leg Extensions</string>
+    <string name="workout7_11">Thigh Abductor</string>
+    <string name="workout8_1">Elliptical</string>
+    <string name="workout8_2">Running</string>
+    <string name="workout8_3">Stair Climber</string>
+    <string name="workout8_4">Jump Roping</string>
+    <string name="workout8_5">KettleBells</string>
+    <string name="workout8_6">Cycling</string>
+    <string name="workout8_7">Swimming</string>
+    <string name="workout8_8">Rowing</string>
+    <string name="workout8_9">High-Intensity Interval Training</string>
+    <string name="workout8_10">Sprinting</string>
+    <string name="workout8_11">Boxing/Kick-Boxing</string>
+    -->
+
 </resources>

@@ -140,6 +140,8 @@ public class RoutinesActivity extends AppCompatActivity
 
         } else if (id == R.id.runningroutine) {
             Log.d(TAG, "onNavigationItemSelected: RuinningRoutine");
+            Intent i = new Intent(getBaseContext(), TrackingActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.monday) {
             Log.d(TAG, "onNavigationItemSelected: Monday");

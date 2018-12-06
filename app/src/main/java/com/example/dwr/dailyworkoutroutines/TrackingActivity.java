@@ -14,29 +14,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
+public class TrackingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG ="MainActivity";
+    private static final String TAG ="TrackingActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_tracking);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         /**
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+         fab.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        .setAction("Action", null).show();
+        }
         });*/
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
     }
 
     @Override
@@ -54,7 +60,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            //super.onBackPressed();
+            Intent i = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(i);
         }
     }
 
@@ -90,12 +97,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.currentworkout) {
             Log.d(TAG, "onNavigationItemSelected: CurrentWorkout");
-            Toast.makeText(this,"Already in Current Workout", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.runningroutine) {
             Log.d(TAG, "onNavigationItemSelected: RuinningRoutine");
-            Intent i = new Intent(getBaseContext(), TrackingActivity.class);
-            startActivity(i);
+            Toast.makeText(this,"Already in Tracking Activity", Toast.LENGTH_SHORT).show();
+
 
         } else if (id == R.id.monday) {
             Log.d(TAG, "onNavigationItemSelected: Monday");

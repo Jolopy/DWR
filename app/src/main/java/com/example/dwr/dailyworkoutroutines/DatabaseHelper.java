@@ -1,5 +1,6 @@
 package com.example.dwr.dailyworkoutroutines;
 
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,11 +26,20 @@ import java.util.ArrayList;
 //mispelling a workout since the spelling and format matters in this case. I organized them by grouping and numbered them.
 
 //getAllData is pretty standard returns a cursor if you want to display the data
+//getDay returns entries for just given day. Days that dont have a specific workout are saved as an empty string. this means that this will give you the rep count for every workout on
+//the requested day, even empty entries. Put this in your activity to get an ArrayList of just active workouts on that day so you dont get a 70-long list full of mostly ""'s:
+/*
+ public void viewDay(String day) {
+        today = new ArrayList<String>();
+        Cursor result = db.getDay(day);
+        while (result.moveToNext()) {
+            if(result.getString(result.getColumnIndex(day)) != ""){
+                 today.add(result.getString(result.getColumnIndex(day)));
+            }
+        }
 
-
-
-
-
+    }
+ */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int numOfWorkouts = 70;
@@ -79,16 +89,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {// i think this is in case table already exists?
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_SCHEDULE);
         onCreate(db);
     }
-
-    //public boolean insertData(String workout){
-
-    public Cursor getAllData() {//cursor supplies readwrite
+    //retrieve all data from Database
+    public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor result = db.rawQuery("select * from " + TABLE_NAME_SCHEDULE, null);
+        return result;
+    }
+
+    //retrieve just a single days workouts ***returns every entry, even empty entrees.  see top
+    public Cursor getDay(String day){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor result = db.rawQuery("select " + day +  " from " + TABLE_NAME_SCHEDULE, null);
         return result;
     }
 
@@ -125,38 +140,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean removeWorkout(String day, String WORKOUT){
+    public boolean removeWorkout(String day, String WORKOUT) {
         SQLiteDatabase db = this.getWritableDatabase();//instance of database class
         ContentValues contentValues = new ContentValues();
-        switch(day){
-            case("Monday"):
+        switch (day) {
+            case ("Monday"):
                 contentValues.put(COL_1, "");
                 break;
-            case("Tuesday"):
+            case ("Tuesday"):
                 contentValues.put(COL_2, "");
                 break;
-            case("Wednesday"):
+            case ("Wednesday"):
                 contentValues.put(COL_3, "");
                 break;
-            case("Thursday"):
+            case ("Thursday"):
                 contentValues.put(COL_4, "");
                 break;
-            case("Friday"):
+            case ("Friday"):
                 contentValues.put(COL_5, "");
                 break;
-            case("Saturday"):
+            case ("Saturday"):
                 contentValues.put(COL_6, "");
                 break;
-            case("Sunday"):
+            case ("Sunday"):
                 contentValues.put(COL_7, "");
                 break;
             default:
                 contentValues.put(COL_1, "ERROR");
         }
-        db.update(TABLE_NAME_SCHEDULE, contentValues, "WORKOUT = ?", new String[] { WORKOUT });
+        db.update(TABLE_NAME_SCHEDULE, contentValues, "WORKOUT = ?", new String[]{WORKOUT});
         Toast.makeText(context, "Workout Updated", Toast.LENGTH_LONG).show();
         return true;
     }
+
 
 }
 

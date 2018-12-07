@@ -6,12 +6,34 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+
+//*********************DATABASE SUMMARY*************************
+//In your Activity initialize:
+//DatabaseHelper db = new DatabaseHelper(this);
+
+//Then when you wish to update the database call:
+//db.addWorkout("Monday", getResources().getStringArray(R.array.workouts)[index], "3x30");
+//To delete use:
+//db.removeWorkout("Monday", getResources().getStringArray(R.array.workouts)[index]);
+
+//Replace Monday with desired day of the week and 3x30 with your desired rep count, can also add \nWeight for weight value.
+//The getResources nonsense retrieves the name of the workout from the strings.xml so look there and find the workout you want. This removes the risk of
+//mispelling a workout since the spelling and format matters in this case. I organized them by grouping and numbered them.
+
+//getAllData is pretty standard returns a cursor if you want to display the data
+
+
+
+
+
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int numOfWorkouts = 70;
-    public static final String workouts[] = new String[numOfWorkouts];
+    Context context;
 
     public static final String DATABASE_NAME = "DailyWorkoutRoutines.db"; //name of database
     public static final String TABLE_NAME_SCHEDULE = "Workout_Schedule"; //each day of the week and its associated workouts
@@ -29,13 +51,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_7 = "Sunday";
 
 
-    public DatabaseHelper(Context context) {super(context, DATABASE_NAME, null, 1); //Constructor
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, 1);
+        this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        String workout;
         db.execSQL("create table " + TABLE_NAME_SCHEDULE + " (WORKOUT TEXT PRIMARY KEY, Monday TEXT, Tuesday TEXT, " +
                 "Wednesday TEXT, Thursday TEXT, Friday TEXT, Saturday TEXT, Sunday TEXT)");//create workout schedule database
+
+        for(int i = 0; i < 70; i++){
+            workout =  context.getResources().getStringArray(R.array.workouts)[i];
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COL_0, workout);
+            contentValues.put(COL_1, "");
+            contentValues.put(COL_2, "");
+            contentValues.put(COL_3, "");
+            contentValues.put(COL_4, "");
+            contentValues.put(COL_5, "");
+            contentValues.put(COL_6, "");
+            contentValues.put(COL_7, "");
+            long result = db.insert(TABLE_NAME_SCHEDULE, null, contentValues);
+        }
+        Toast.makeText(context, "Table Made", Toast.LENGTH_LONG).show();//i think this shit jusut displays
     }
 
     @Override
@@ -44,30 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String workout){
-        SQLiteDatabase db = this.getWritableDatabase();//instance of database class
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_0, workout);
-        contentValues.put(COL_1, "");
-        contentValues.put(COL_2, "");
-        contentValues.put(COL_3, "");
-        contentValues.put(COL_4, "");
-        contentValues.put(COL_5, "");
-        contentValues.put(COL_6, "");
-        contentValues.put(COL_7, "");
-        long result = db.insert(TABLE_NAME_SCHEDULE, null, contentValues);
-        if(result == -1) {
-            return false;
-        }else{
-            return true;
-        }
-    }
-    public void initTable(){
-        boolean isInserted;
-        for(int i = 0; i < 70; i++){
-            isInserted = insertData(Resources.getSystem().getStringArray(R.array.workouts)[i]);
-        }
-    }
+    //public boolean insertData(String workout){
 
     public Cursor getAllData() {//cursor supplies readwrite
         SQLiteDatabase db = this.getWritableDatabase();
@@ -75,19 +92,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public boolean updateData(String ID, String name, String number){
+    public boolean addWorkout(String day, String WORKOUT, String Quantity){ //use this to alter database, if you want to add 3 sets of 30 dips on monday, make a call: updateData("Monday", "dips", "3x30");
         SQLiteDatabase db = this.getWritableDatabase();//instance of database class
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_1, ID);
-        contentValues.put(COL_2, name);
-        contentValues.put(COL_3, number);
-        db.update(TABLE_NAME_SCHEDULE, contentValues, "ID = ?", new String[] { ID });
+        switch(day){
+            case("Monday"):
+                contentValues.put(COL_1, Quantity);
+                break;
+            case("Tuesday"):
+                contentValues.put(COL_2, Quantity);
+                break;
+            case("Wednesday"):
+                contentValues.put(COL_3, Quantity);
+                break;
+            case("Thursday"):
+                contentValues.put(COL_4, Quantity);
+                break;
+            case("Friday"):
+                contentValues.put(COL_5, Quantity);
+                break;
+            case("Saturday"):
+                contentValues.put(COL_6, Quantity);
+                break;
+            case("Sunday"):
+                contentValues.put(COL_7, Quantity);
+                break;
+            default:
+                contentValues.put(COL_1, "ERROR");
+        }
+        db.update(TABLE_NAME_SCHEDULE, contentValues, "WORKOUT = ?", new String[] { WORKOUT });
+        Toast.makeText(context, "Workout Updated", Toast.LENGTH_LONG).show();
         return true;
     }
 
-    public Integer deleteData(String ID){
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME_SCHEDULE, "ID = ?", new String[] {ID});
+    public boolean removeWorkout(String day, String WORKOUT){
+        SQLiteDatabase db = this.getWritableDatabase();//instance of database class
+        ContentValues contentValues = new ContentValues();
+        switch(day){
+            case("Monday"):
+                contentValues.put(COL_1, "");
+                break;
+            case("Tuesday"):
+                contentValues.put(COL_2, "");
+                break;
+            case("Wednesday"):
+                contentValues.put(COL_3, "");
+                break;
+            case("Thursday"):
+                contentValues.put(COL_4, "");
+                break;
+            case("Friday"):
+                contentValues.put(COL_5, "");
+                break;
+            case("Saturday"):
+                contentValues.put(COL_6, "");
+                break;
+            case("Sunday"):
+                contentValues.put(COL_7, "");
+                break;
+            default:
+                contentValues.put(COL_1, "ERROR");
+        }
+        db.update(TABLE_NAME_SCHEDULE, contentValues, "WORKOUT = ?", new String[] { WORKOUT });
+        Toast.makeText(context, "Workout Updated", Toast.LENGTH_LONG).show();
+        return true;
     }
 
 }

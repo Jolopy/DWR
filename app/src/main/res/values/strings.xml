@@ -7,6 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!--array of every workout-->
     <string-array name="workouts">
         <!--chest-->
         <item>Barbell Bench Press</item>
@@ -81,7 +82,7 @@
         <item>Leg Extensions</item>
         <item>Thigh Abductor</item>
 
-        <!--Carddio-->
+        <!--Cardio-->
         <item>Elliptical</item>
         <item>Running</item>
         <item>Stair Climber</item>
@@ -94,7 +95,10 @@
         <item>Sprinting</item>
         <item>Boxing/Kick-Boxing</item>
     </string-array>
+
+
     <!--
+    Individual Strings
     <string name="workout1_1">Barbell Bench Press</string>
     <string name="workout1_2">Flat Bench Dumbbell Press</string>
     <string name="workout1_3">Incline Barbell Bench Press</string>

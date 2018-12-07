@@ -72,6 +72,7 @@ public class InfoActivity extends AppCompatActivity
 
         mWorkoutText.setText(workout.toUpperCase());
 
+
         switch (workout){
             //* <----------------------CHEST WORKOUTS---------------------->*//*
             //* <----------------------CHEST WORKOUTS---------------------->*//*
@@ -128,7 +129,7 @@ public class InfoActivity extends AppCompatActivity
 
             case "Incline Dumbbell hammer Curl":
                 Glide.with(this)
-                        .load(R.raw.one)
+                        .load(R.raw.biceps_one)
                         .into(imageView);
                 break;
             case "Incline Inner Bicep Curl":

@@ -29,12 +29,12 @@ import java.util.ArrayList;
 //getDay returns entries for just given day. Days that dont have a specific workout are saved as an empty string. this means that this will give you the rep count for every workout on
 //the requested day, even empty entries. Put this in your activity to get an ArrayList of just active workouts on that day so you dont get a 70-long list full of mostly ""'s:
 /*
- public void viewDay(String day) {
-        today = new ArrayList<String>();
+  public void viewDay(String day) {
+        today = new ArrayList<Workout>();
         Cursor result = db.getDay(day);
         while (result.moveToNext()) {
             if(result.getString(result.getColumnIndex(day)) != ""){
-                 today.add(result.getString(result.getColumnIndex(day)));
+                 today.add(result.getString(result.getColumnIndex(0)), result.getString(result.getColumnIndex(day)));
             }
         }
 

@@ -34,7 +34,7 @@ import java.util.ArrayList;
         Cursor result = db.getDay(day);
         while (result.moveToNext()) {
             if(result.getString(result.getColumnIndex(day)) != ""){
-                 today.add(result.getString(result.getColumnIndex(0)), result.getString(result.getColumnIndex(day)));
+                 today.add(new Workout(result.getString(result.getColumnIndex(0)), result.getString(result.getColumnIndex(day))));
             }
         }
 

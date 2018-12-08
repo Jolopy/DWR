@@ -14,8 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoutinesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,6 +28,15 @@ public class RoutinesActivity extends AppCompatActivity
     private static final String TAG ="RoutinesActivity";
     private String day;
     private TextView mDay;
+    private ListView workoutList,workoutDayList;
+
+    private ArrayList<String> arrayList1;
+    private ArrayList<String> arrayList2;
+    private ArrayAdapter<String> adapter1;
+    private ArrayAdapter<String> adapter2;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +46,20 @@ public class RoutinesActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mDay = (TextView)findViewById(R.id.dayText);
+        workoutList = (ListView)findViewById(R.id.listOfWorkout);
+        workoutDayList = (ListView)findViewById(R.id.listOfDay);
+
+        arrayList1 = new ArrayList<String>();
+        arrayList2 = new ArrayList<String>();
+
+        adapter1 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList1);
+        adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList2);
+
+        populateList();
+
+        workoutList.setAdapter(adapter1);
+
+
 
         /**
          FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -88,6 +116,8 @@ public class RoutinesActivity extends AppCompatActivity
                 mDay.setText("Invalid Try again");
                 break;
         }
+
+
 
 
     }
@@ -191,4 +221,13 @@ public class RoutinesActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    public void populateList(){
+        for(int i = 0; i < getResources().getStringArray(R.array.workouts).length; i++){
+            adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+
+        }
+    }
 }
+

@@ -5,6 +5,8 @@ import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,20 +29,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ListFragment.ListFragmentListener, ExerciseFragment.ExerciseFragmentListener {
 
     private static final String TAG ="MainActivity";
 
 
-    // UI Variables
-    TextView date_TV;
-
-    ListView m_exercisesLV;
-    ArrayList<String> m_exerciseArrayList;
-    ArrayAdapter<String> m_adapter;
-
-
-
+    ListFragment m_ListFragment;
+    ExerciseFragment m_ExerciseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,49 +64,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //* <---------------------- Continue OnCreate ---------------------->*//*
-        date_TV = (TextView) findViewById(R.id.dateTV);
-        displayDate();
-
-        m_exercisesLV = (ListView) findViewById(R.id.exercisesLV);
-        // Update ArrayList exercises
-        getExercises();
-
-        // Set ListView item click listener
-        m_exercisesLV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // Go to exercise information here
-                String exercise_name = m_exercisesLV.getItemAtPosition(position).toString();
-                // Do more here with click on specific exercise
-                return true;
-            }
-        });
-
-
+        m_ListFragment = new ListFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().add(R.id.container, m_ListFragment, "List");
+        fragmentTransaction.commit();
 
     }
-
-    //* <---------------------- Begin Methods ---------------------->*//*
-
-    public void displayDate() {
-        Date date = new Date();
-        String day = (String) DateFormat.format("EEEE", date); // Saturday
-        String month = (String) DateFormat.format("MMM",  date); // Dec
-        String day_num = (String) DateFormat.format("dd",   date); // 08
-        String date_str = day + ", " + month + " " + day_num;
-        date_TV.setText(date_str);
-    }
-
-    public void getExercises(){
-        // contactArrayList = dbHandler.getContactsArrayList();
-        m_exerciseArrayList = new ArrayList<String>();
-        m_exerciseArrayList.add("Dips"); m_exerciseArrayList.add("Push-ups"); m_exerciseArrayList.add("Leg Curls"); m_exerciseArrayList.add("Jump Roping");
-        m_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
-        m_exercisesLV.setAdapter(m_adapter);
-    }
-
-    //* <---------------------- End Methods ---------------------->*//*
-
 
 
 
@@ -121,6 +79,12 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             //super.onBackPressed();
+        }
+
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -211,4 +175,15 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void goToExercise(String name) {
+        Bundle bundle = new Bundle();
+        bundle.putString("ex_name", name);
+        m_ExerciseFragment = new ExerciseFragment();
+        m_ExerciseFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.container, m_ExerciseFragment, "Exercise").addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 }

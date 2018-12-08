@@ -96,6 +96,9 @@
         <item>Boxing/Kick-Boxing</item>
     </string-array>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
     <!--
     Individual Strings

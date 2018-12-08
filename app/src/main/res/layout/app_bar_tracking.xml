@@ -20,7 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_tracking" />
+    <include layout="@layout/activity_run_tracker" />
 
     <!--
     <android.support.design.widget.FloatingActionButton

@@ -23,11 +23,11 @@ import java.util.ArrayList;
 
 //Replace Monday with desired day of the week and 3x30 with your desired rep count, can also add \nWeight for weight value.
 //The getResources nonsense retrieves the name of the workout from the strings.xml so look there and find the workout you want. This removes the risk of
-//mispelling a workout since the spelling and format matters in this case. I organized them by grouping and numbered them.
+//misspelling a workout since the spelling and format matters in this case. I organized them by grouping and numbered them.
 
 //getAllData is pretty standard returns a cursor if you want to display the data
-//getDay returns entries for just given day. Days that dont have a specific workout are saved as an empty string. this means that this will give you the rep count for every workout on
-//the requested day, even empty entries. Put this in your activity to get an ArrayList of just active workouts on that day so you dont get a 70-long list full of mostly ""'s:
+//getDay returns entries for just given day. Days that don't have a specific workout are saved as an empty string. this means that this will give you the rep count for every workout on
+//the requested day, even empty entries. Put this in your activity to get an ArrayList of just active workouts on that day so you don't get a 70-long list full of mostly ""'s:
 /*
   public void viewDay(String day) {
         today = new ArrayList<Workout>();
@@ -85,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(COL_7, "");
             long result = db.insert(TABLE_NAME_SCHEDULE, null, contentValues);
         }
-        Toast.makeText(context, "Table Made", Toast.LENGTH_LONG).show();//i think this shit jusut displays
+        Toast.makeText(context, "Table Made", Toast.LENGTH_LONG).show();//i think this shit just displays
     }
 
     @Override

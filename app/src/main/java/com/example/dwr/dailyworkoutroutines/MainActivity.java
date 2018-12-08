@@ -1,9 +1,11 @@
 package com.example.dwr.dailyworkoutroutines;
 
 import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -14,12 +16,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG ="MainActivity";
+
+
+    // UI Variables
+    TextView date_TV;
+
+    ListView m_exercisesLV;
+    ArrayList<String> m_exerciseArrayList;
+    ArrayAdapter<String> m_adapter;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +66,53 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //* <---------------------- Continue OnCreate ---------------------->*//*
+        date_TV = (TextView) findViewById(R.id.dateTV);
+        displayDate();
+
+        m_exercisesLV = (ListView) findViewById(R.id.exercisesLV);
+        // Update ArrayList exercises
+        getExercises();
+
+        // Set ListView item click listener
+        m_exercisesLV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Go to exercise information here
+                String exercise_name = m_exercisesLV.getItemAtPosition(position).toString();
+                // Do more here with click on specific exercise
+                return true;
+            }
+        });
+
+
+
     }
+
+    //* <---------------------- Begin Methods ---------------------->*//*
+
+    public void displayDate() {
+        Date date = new Date();
+        String day = (String) DateFormat.format("EEEE", date); // Saturday
+        String month = (String) DateFormat.format("MMM",  date); // Dec
+        String day_num = (String) DateFormat.format("dd",   date); // 08
+        String date_str = day + ", " + month + " " + day_num;
+        date_TV.setText(date_str);
+    }
+
+    public void getExercises(){
+        // contactArrayList = dbHandler.getContactsArrayList();
+        m_exerciseArrayList = new ArrayList<String>();
+        m_exerciseArrayList.add("Dips"); m_exerciseArrayList.add("Push-ups"); m_exerciseArrayList.add("Leg Curls"); m_exerciseArrayList.add("Jump Roping");
+        m_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
+        m_exercisesLV.setAdapter(m_adapter);
+    }
+
+    //* <---------------------- End Methods ---------------------->*//*
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -135,8 +201,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.sunday) {
             Log.d(TAG, "onNavigationItemSelected: Sunday");
-            Intent i = new Intent(getBaseContext(), RoutinesActivity.class);
-            i.putExtra("day", "sunday");
+            Intent i = new Intent(getBaseContext(), InfoActivity.class);
+            i.putExtra("day", "Reverse Flys");
             startActivity(i);
 
         }

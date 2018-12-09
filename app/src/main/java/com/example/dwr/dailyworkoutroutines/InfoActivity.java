@@ -61,7 +61,7 @@ public class InfoActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
         {
-            workout = extras.getString("day");
+            workout = extras.getString("workout");
         }else{
             workout = "unknown";
         }
@@ -631,9 +631,8 @@ public class InfoActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent i = new Intent(getBaseContext(), MainActivity.class);
-            startActivity(i);
+        }else{
+            super.onBackPressed();
         }
     }
 

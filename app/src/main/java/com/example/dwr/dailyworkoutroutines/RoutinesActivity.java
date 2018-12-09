@@ -160,6 +160,19 @@ public class RoutinesActivity extends AppCompatActivity
             }
         });
 
+        workoutList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selected = (workoutList.getItemAtPosition(position).toString());
+                Log.d(TAG, "onNavigationItemSelected: Info");
+                Intent i = new Intent(getBaseContext(), InfoActivity.class);
+                i.putExtra("workout", selected);
+                startActivity(i);
+
+                return false;
+            }
+        });
+
 
         Bundle extras = getIntent().getExtras();
         if(extras !=null)
@@ -172,24 +185,31 @@ public class RoutinesActivity extends AppCompatActivity
         switch (day) {
             case "monday":
                 mDay.setText("Monday");
+                day = "Monday";
                 break;
             case "tuesday":
                 mDay.setText("Tuesday");
+                day = "Tuesday";
                 break;
             case "wednesday":
                 mDay.setText("Wednesday");
+                day = "Wednesday";
                 break;
             case "thursday":
                 mDay.setText("Thursday");
+                day = "Thursday";
                 break;
             case "friday":
                 mDay.setText("Friday");
+                day = "Friday";
                 break;
             case "saturday":
                 mDay.setText("Saturday");
+                day = "Saturday";
                 break;
             case "sunday":
                 mDay.setText("Sunday");
+                day = "Sunday";
                 break;
             default:
                 mDay.setText("Invalid Try again");
@@ -311,7 +331,7 @@ public class RoutinesActivity extends AppCompatActivity
                 Toast.makeText(RoutinesActivity.this, "Workout Added to " + day, Toast.LENGTH_SHORT).show();
                 adapter2.add(selected + ": " +int1+"x"+int2+" Lbs: " + mEditText.getText().toString());
                 workoutDayList.setAdapter(adapter2);
-                db.addWorkout(day, selected, int1+"x"+int2);
+                db.addWorkout(day, selected, int1+"x"+int2+" Lbs: " + mEditText.getText().toString());
 
 
                 int1 = 0;
@@ -499,8 +519,20 @@ public class RoutinesActivity extends AppCompatActivity
 
     }
     public void viewDay(String day) {
-        // do stuff here
+        today = new ArrayList<Workout>();
+        Cursor result = db.getDay(day);
+        while (result.moveToNext()) {
+            if(result.getString(result.getColumnIndex(day)).equals("")){
+                //Log.d(TAG, "viewDay: NOTHING HERE");
+                
+            }else {
+                //Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer] + "  REPS SETS:" + result.getString(result.getColumnIndex(day)));
+                adapter2.add(getResources().getStringArray(R.array.workouts)[indexer] + ": "  + result.getString(result.getColumnIndex(day)));
 
+            }
+            indexer++;
+        }
+        workoutDayList.setAdapter(adapter2);
 
     }
 }

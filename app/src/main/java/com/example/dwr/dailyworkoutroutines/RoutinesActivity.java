@@ -1,6 +1,9 @@
 package com.example.dwr.dailyworkoutroutines;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,13 +17,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.Button;
+
 
 public class RoutinesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +43,23 @@ public class RoutinesActivity extends AppCompatActivity
     private ArrayAdapter<String> adapter1;
     private ArrayAdapter<String> adapter2;
 
+    private Button mChestButton,mBicepsButton,mTricepsButton,
+        mShoulderButton,mAbsButton,mBackButton,mLegsButton,mCardioButton;
+
+    private TextView mTextWorkout,mReps,mSets,mNumber1,mNumber2;
+    private Button mButtonUp1,mButtonUp2,mButtonDown1,mButtonDown2;
+    private EditText mEditText;
+    private Button mSave;
+
+    public int int1,int2 = 0;
+
+    public String selected;
+
+    private DatabaseHelper db;
+
+    public ArrayList<Workout> today;
+    public int indexer = 0;
+    public Cursor result;
 
 
 
@@ -45,20 +70,47 @@ public class RoutinesActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        db = new DatabaseHelper(this);
+
+
+        //Top Half
         mDay = (TextView)findViewById(R.id.dayText);
         workoutList = (ListView)findViewById(R.id.listOfWorkout);
         workoutDayList = (ListView)findViewById(R.id.listOfDay);
+        mChestButton =(Button)findViewById(R.id.chestButton);
+        mBicepsButton =(Button)findViewById(R.id.bicepsButton);
+        mTricepsButton =(Button)findViewById(R.id.tricepsButton);
+        mShoulderButton =(Button)findViewById(R.id.shoulderButton);
+        mAbsButton =(Button)findViewById(R.id.absButton);
+        mBackButton =(Button)findViewById(R.id.backButton);
+        mLegsButton =(Button)findViewById(R.id.legsButton);
+        mCardioButton =(Button)findViewById(R.id.cardioButton);
 
-        arrayList1 = new ArrayList<String>();
+        //Bottom half
+        mTextWorkout = (TextView) findViewById(R.id.savingWorkoutText);
+        mReps = (TextView) findViewById(R.id.mReps);
+        mSets = (TextView) findViewById(R.id.mSets);
+        mNumber1 = (TextView) findViewById(R.id.mNumber1);
+        mNumber2 = (TextView) findViewById(R.id.mNumber2);
+
+        mButtonUp1 = (Button) findViewById(R.id.push_button1);
+        mButtonDown1 =(Button) findViewById(R.id.push_button2);
+        mButtonUp2 = (Button) findViewById(R.id.push_button3);
+        mButtonDown2 =(Button) findViewById(R.id.push_button4);
+        mEditText = (EditText) findViewById(R.id.editText);
+        mSave = (Button) findViewById(R.id.saveButton);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+
+        //I should of use a fragment i regret everything
+        setInvisible();
+
+
         arrayList2 = new ArrayList<String>();
 
-        adapter1 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList1);
-        adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, arrayList2);
-
-        populateList();
-
-        workoutList.setAdapter(adapter1);
-
+        adapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.test_list_item, arrayList2);
 
 
         /**
@@ -80,6 +132,33 @@ public class RoutinesActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        workoutDayList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                selected = (workoutDayList.getItemAtPosition(position).toString());
+                String[] array = selected.split(":");
+
+                Log.d(TAG, "onItemClick: " +array[0]);
+                db.removeWorkout(day, array[0]);
+
+                adapter2.remove(selected);
+                workoutDayList.setAdapter(adapter2);
+
+                Toast.makeText(RoutinesActivity.this, "Removed Selected Item", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+
+        workoutList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected = (workoutList.getItemAtPosition(position).toString());
+                mTextWorkout.setText(selected);
+                setVisible();
+            }
+        });
 
 
         Bundle extras = getIntent().getExtras();
@@ -117,8 +196,132 @@ public class RoutinesActivity extends AppCompatActivity
                 break;
         }
 
+        viewDay(day);
+
+        mChestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(0);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
+        mBicepsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(1);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
+        mTricepsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(2);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
+        mShoulderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(3);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
+        mAbsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(4);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(5);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
+        mLegsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(6);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
+        mCardioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                populateList(7);
+                workoutList.setAdapter(adapter1);
+
+            }
+        });
 
 
+        mButtonUp1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int1++;
+                mNumber1.setText(String.valueOf(int1));
+            }
+        });
+        mButtonDown1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(int1 == 0){
+                    Toast.makeText(RoutinesActivity.this, "Cannot go lower", Toast.LENGTH_SHORT).show();
+                }else{
+                    int1--;
+                    mNumber1.setText(String.valueOf(int1));
+
+                }
+
+            }
+        });
+        mButtonUp2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int2++;
+                mNumber2.setText(String.valueOf(int2));
+            }
+        });
+        mButtonDown2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(int2 == 0){
+                    Toast.makeText(RoutinesActivity.this, "Cannot go lower", Toast.LENGTH_SHORT).show();
+                }else{
+                    int2--;
+                    mNumber2.setText(String.valueOf(int2));
+
+                }
+            }
+        });
+
+
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(RoutinesActivity.this, "Workout Added to " + day, Toast.LENGTH_SHORT).show();
+                adapter2.add(selected + ": " +int1+"x"+int2+" Lbs: " + mEditText.getText().toString());
+                workoutDayList.setAdapter(adapter2);
+                db.addWorkout(day, selected, int1+"x"+int2);
+
+
+                int1 = 0;
+                int2 = 0;
+                mNumber1.setText(String.valueOf(int1));
+                mNumber2.setText(String.valueOf(int2));
+
+                setInvisible();
+            }
+        });
 
     }
 
@@ -223,11 +426,82 @@ public class RoutinesActivity extends AppCompatActivity
     }
 
 
-    public void populateList(){
-        for(int i = 0; i < getResources().getStringArray(R.array.workouts).length; i++){
-            adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+    public void populateList(int x){
+        arrayList1 = new ArrayList<String>();
+        adapter1 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.test_list_item, arrayList1);
 
+        if(x == 0){
+            for(int i = 0; i <= 7; i++){
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
+        }else if(x == 1){
+            for(int i = 8; i <= 15; i++){
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
+        } else if(x == 2){
+            for(int i = 16; i <= 23; i++){
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
+
+        }else if( x == 3){
+            for(int i = 24; i <= 31; i++){
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
+        }else if( x == 4){
+            for(int i = 32; i <= 39; i++){
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
+
+        }else if( x == 5){
+            for(int i = 40; i <= 47; i++){
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
+
+        }else if( x == 6){
+            for(int i = 48; i <= 58; i++){
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
+
+        }else if( x == 7) {
+            for (int i = 59; i <= 69; i++) {
+                adapter1.add(getResources().getStringArray(R.array.workouts)[i]);
+            }
         }
+
+    }
+
+    public void setInvisible() {
+        mTextWorkout.setVisibility(View.INVISIBLE);
+        mReps.setVisibility(View.INVISIBLE);
+        mSets.setVisibility(View.INVISIBLE);
+        mNumber1.setVisibility(View.INVISIBLE);
+        mNumber2.setVisibility(View.INVISIBLE);
+        mButtonDown1.setVisibility(View.INVISIBLE);
+        mButtonDown2.setVisibility(View.INVISIBLE);
+        mButtonUp1.setVisibility(View.INVISIBLE);
+        mButtonUp2.setVisibility(View.INVISIBLE);
+        mEditText.setVisibility(View.INVISIBLE);
+        mSave.setVisibility(View.INVISIBLE);
+    }
+
+    public void setVisible(){
+        mTextWorkout.setVisibility(View.VISIBLE);
+        mReps.setVisibility(View.VISIBLE);
+        mSets.setVisibility(View.VISIBLE);
+        mNumber1.setVisibility(View.VISIBLE);
+        mNumber2.setVisibility(View.VISIBLE);
+        mButtonDown1.setVisibility(View.VISIBLE);
+        mButtonDown2.setVisibility(View.VISIBLE);
+        mButtonUp1.setVisibility(View.VISIBLE);
+        mButtonUp2.setVisibility(View.VISIBLE);
+        mEditText.setVisibility(View.VISIBLE);
+        mSave.setVisibility(View.VISIBLE);
+
+    }
+    public void viewDay(String day) {
+        // do stuff here
+
+
     }
 }
 

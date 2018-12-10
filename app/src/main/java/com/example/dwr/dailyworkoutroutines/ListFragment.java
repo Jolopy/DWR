@@ -22,7 +22,6 @@ import java.util.Date;
 public class ListFragment extends Fragment {
     private static final String TAG ="ListFragment";
 
-
     DatabaseHelper db;
 
     ListFragmentListener m_ListFragmentListener;
@@ -30,12 +29,12 @@ public class ListFragment extends Fragment {
 
     // UI variables
     TextView date_TV;
+    TextView todayworkoutTV;
 
     ListView m_exercisesLV;
     ArrayList<String> m_exerciseArrayList;
     ArrayAdapter<String> m_adapter;
 
-    ArrayList<Workout> today;
 
     public ListFragment() {
         // Required empty public constructor
@@ -55,12 +54,12 @@ public class ListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list, container, false);
 
-        date_TV = (TextView) view.findViewById(R.id.dateTV);
-        displayDate();
+        todayworkoutTV = (TextView) view.findViewById(R.id.workout_title_TV);
 
+        date_TV = (TextView) view.findViewById(R.id.dateTV);
         m_exercisesLV = (ListView) view.findViewById(R.id.exercisesLV);
-        // Update ArrayList exercises
-        //getExercises();
+        // Display today's date and update ListView for today
+        displayDate();
 
         m_exercisesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -95,11 +94,34 @@ public class ListFragment extends Fragment {
         // Stores just the exercise names for the current day
         m_exerciseArrayList = new ArrayList<String>();
         // Stores Workout objects so I can get sets, reps of specific exercise clicked in list view
-        today = new ArrayList<Workout>();
 
-        Cursor result = db.getDay(day);
-        int indexer = 0;
+        if(db == null){
+            todayworkoutTV.setText("No Workouts Today");
+        } else{
+            Cursor result = db.getDay(day);
+            int indexer = 0;
+            while (result.moveToNext()) {
+                if(result.getString(result.getColumnIndex(day)).equals("")){
+                    Log.d(TAG, "viewDay: NOTHING HERE");
+                }else {
+                    Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer]);
+                    m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer]);
+                }
+                indexer++;
+            }
+            if(m_exerciseArrayList.size() == 0 ){
+                Log.d(TAG, "viewDay: Nothing in here nub");
+                todayworkoutTV.setText("No Workouts Today");
 
+            }else{
+                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
+                m_exercisesLV.setAdapter(m_adapter);
+            }
+
+        }
+
+
+        /*
         while (result.moveToNext()) {
             if(result.getString(result.getColumnIndex(day)).equals("")){
                 Log.d(TAG, "viewDay: NOTHING HERE");
@@ -117,16 +139,12 @@ public class ListFragment extends Fragment {
         }
         if(m_exerciseArrayList.size() == 0 ){
             Log.d(TAG, "viewDay: Nothing in here nub");
-            //RICH
-            //RICH
-            //RICH
-            //RICH
-            // ADD THIS TO TODAY's WORKOUTS text. Like .setText("No Workouts Today");
+            todayworkoutTV.setText("No Workouts Today");
 
         }else{
             m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
             m_exercisesLV.setAdapter(m_adapter);
-        }
+        } */
     }
 
     public void getExercises(){

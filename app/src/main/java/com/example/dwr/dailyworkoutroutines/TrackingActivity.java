@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.w3c.dom.Text;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class TrackingActivity extends AppCompatActivity
@@ -58,12 +63,31 @@ public class TrackingActivity extends AppCompatActivity
     boolean isStarted = false;
     Polyline polyline;
     boolean LOCATION_ENABLED = false;
+
+    public Button start,end;
+    public TextView timeCount,speedCount;
+    public Chronometer timer;
+    public double chrisDistance;
+    public DecimalFormat df;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        start = (Button)findViewById(R.id.startbutton);
+        end = (Button)findViewById(R.id.endbutton);
+        timeCount = (TextView)findViewById(R.id.timeCount);
+        speedCount = (TextView) findViewById(R.id.speedCount);
+        timer = (Chronometer) findViewById(R.id.timerTracking);
+        df = new DecimalFormat("0.00");
+
+
+
 
 
         /**
@@ -256,6 +280,8 @@ public class TrackingActivity extends AppCompatActivity
                     b.setLatitude(locations.get(locations.size()-1).latitude);
                     b.setLongitude(locations.get(locations.size()-1).longitude);
                     distanceRan += a.distanceTo(b);
+                    chrisDistance = (distanceRan*0.000621371);
+                    speedCount.setText(df.format(chrisDistance) + " miles");
                 }
             }
 
@@ -278,13 +304,20 @@ public class TrackingActivity extends AppCompatActivity
 
 
     public void onStartClicked(){
-        Button start = (Button)findViewById(R.id.startbutton);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Init time measure
                 startTime = SystemClock.elapsedRealtime();
                 System.out.println("time started");
+                start.setVisibility(View.INVISIBLE);
+                end.setVisibility(View.VISIBLE);
+                speedCount.setVisibility(View.VISIBLE);
+                timeCount.setVisibility(View.VISIBLE);
+                timer.setVisibility(View.VISIBLE);
+                timer.setBase(SystemClock.elapsedRealtime());
+                timer.start();
+
                 isStarted = true;
             }
         });
@@ -292,13 +325,19 @@ public class TrackingActivity extends AppCompatActivity
 
 
     public void onEndClick() {
-        Button end = (Button)findViewById(R.id.endbutton);
         end.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 if(startTime == 0){
                     return;
                 }
+                start.setVisibility(View.VISIBLE);
+                speedCount.setVisibility(View.INVISIBLE);
+                timeCount.setVisibility(View.INVISIBLE);
+                timer.setVisibility(View.INVISIBLE);
+                end.setVisibility(View.INVISIBLE);
+                timer.stop();
+                chrisDistance = 0;
                 isStarted = false;
                 System.out.println("time ended");
                 finishTime = SystemClock.elapsedRealtime();

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import java.util.Date;
 
 
 public class ListFragment extends Fragment {
+    private static final String TAG ="ListFragment";
+
 
     DatabaseHelper db;
 
@@ -58,7 +61,6 @@ public class ListFragment extends Fragment {
         m_exercisesLV = (ListView) view.findViewById(R.id.exercisesLV);
         // Update ArrayList exercises
         //getExercises();
-        viewDay("Monday");
 
         m_exercisesLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,6 +87,8 @@ public class ListFragment extends Fragment {
         String day_num = (String) DateFormat.format("dd",   date); // 08
         String date_str = day + ", " + month + " " + day_num;
         date_TV.setText(date_str);
+        Log.d(TAG, "displayDate: " +date_str);
+        viewDay(day);
     }
 
     public void viewDay(String day) {
@@ -98,20 +102,31 @@ public class ListFragment extends Fragment {
 
         while (result.moveToNext()) {
             if(result.getString(result.getColumnIndex(day)).equals("")){
-                //Log.d(TAG, "viewDay: NOTHING HERE");
+                Log.d(TAG, "viewDay: NOTHING HERE");
 
             }else {
 
                 // ** Need Workout Object into ArrayList today here
                 // not sure how to do that
-
+                Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer]);
+                m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer]);
                 // ** Need just the exercise name into ArrayList m_exerciseArrayList here
-                m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer] + ": "  + result.getString(result.getColumnIndex(day)));
+                //m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer] + ": "  + result.getString(result.getColumnIndex(day)));
             }
             indexer++;
         }
-        m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
-        m_exercisesLV.setAdapter(m_adapter);
+        if(m_exerciseArrayList.size() == 0 ){
+            Log.d(TAG, "viewDay: Nothing in here nub");
+            //RICH
+            //RICH
+            //RICH
+            //RICH
+            // ADD THIS TO TODAY's WORKOUTS text. Like .setText("No Workouts Today");
+
+        }else{
+            m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
+            m_exercisesLV.setAdapter(m_adapter);
+        }
     }
 
     public void getExercises(){

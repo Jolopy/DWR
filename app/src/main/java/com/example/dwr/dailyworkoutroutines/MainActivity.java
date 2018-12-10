@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.sunday) {
             Log.d(TAG, "onNavigationItemSelected: Sunday");
-            Intent i = new Intent(getBaseContext(), InfoActivity.class);
+            Intent i = new Intent(getBaseContext(), RoutinesActivity.class);
             i.putExtra("day", "sunday");
             startActivity(i);
 

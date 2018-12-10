@@ -1,8 +1,12 @@
 package com.example.dwr.dailyworkoutroutines;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
@@ -657,7 +661,20 @@ public class InfoActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "Requesting Permissions Callback");
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 0){
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //do location stuff
+                Log.d(TAG,"Location Enabled");
+                Intent i = new Intent(getBaseContext(), TrackingActivity.class);
+                startActivity(i);
+            }
+        }
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -673,9 +690,14 @@ public class InfoActivity extends AppCompatActivity
 
         } else if (id == R.id.runningroutine) {
             Log.d(TAG, "onNavigationItemSelected: CurrentWorkout");
-            Intent i = new Intent(getBaseContext(), TrackingActivity.class);
-            startActivity(i);
-
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                Log.d(TAG, "Requesting Location Permissions");
+            }
+            else{
+                Intent i = new Intent(getBaseContext(), TrackingActivity.class);
+                startActivity(i);
+            }
         } else if (id == R.id.monday) {
             Log.d(TAG, "onNavigationItemSelected: Monday");
             Intent i = new Intent(getBaseContext(), RoutinesActivity.class);

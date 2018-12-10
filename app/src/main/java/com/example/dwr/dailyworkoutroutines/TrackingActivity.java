@@ -57,7 +57,7 @@ public class TrackingActivity extends AppCompatActivity
     private ArrayList<Marker> markers = new ArrayList<Marker>();
     boolean isStarted = false;
     Polyline polyline;
-
+    boolean LOCATION_ENABLED = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,8 +139,6 @@ public class TrackingActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
-
         int id = item.getItemId();
 
         if (id == R.id.currentworkout) {
@@ -205,20 +203,21 @@ public class TrackingActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        System.out.println("Requesting Permissions Callback");
+        Log.d(TAG, "Requesting Permissions Callback");
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 0){
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //do location stuff
+                Log.d(TAG,"Location Enabled");
+            }
+        }
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-            System.out.println("Requesting Permissions");
-            //return;
-        }
-        mMap.setMyLocationEnabled(true);
         //init uisettings of map
         UiSettings uiSettings = mMap.getUiSettings();
         //add zoom controls
@@ -229,18 +228,16 @@ public class TrackingActivity extends AppCompatActivity
         uiSettings.setMyLocationButtonEnabled(true);
         //get current location
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            System.out.println("Requesting Permissions");
+            onBackPressed();
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 3, new LocationListener() {
+
+        //get current location
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 0, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 //current location
@@ -266,8 +263,6 @@ public class TrackingActivity extends AppCompatActivity
                     b.setLongitude(locations.get(locations.size()-1).longitude);
                     distanceRan += a.distanceTo(b);
                 }
-
-
             }
 
             @Override

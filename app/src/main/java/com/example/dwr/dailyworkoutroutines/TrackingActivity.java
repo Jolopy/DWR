@@ -97,9 +97,6 @@ public class TrackingActivity extends AppCompatActivity
         startTime = 0;
         onStartClicked();
         onEndClick();
-
-
-
     }
 
     @Override
@@ -217,24 +214,21 @@ public class TrackingActivity extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
+
         mMap = googleMap;
         //init uisettings of map
+        mMap.setMyLocationEnabled(true);
+        //uisettings...
         UiSettings uiSettings = mMap.getUiSettings();
+        //add my location button
+        uiSettings.setMyLocationButtonEnabled(true);
         //add zoom controls
         uiSettings.setZoomControlsEnabled(true);
         //add compass
         uiSettings.setCompassEnabled(true);
-        //add my location button
-        uiSettings.setMyLocationButtonEnabled(true);
-        //get current location
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-            System.out.println("Requesting Permissions");
-            onBackPressed();
-            return;
-        }
-
         //get current location
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 0, new LocationListener() {
@@ -309,7 +303,7 @@ public class TrackingActivity extends AppCompatActivity
                 System.out.println("time ended");
                 finishTime = SystemClock.elapsedRealtime();
                 //calc elapsed run time
-                long timeRanSeconds = (finishTime - startTime)/1000;
+                double timeRanSeconds = (finishTime - startTime)/1000;
                 int minutes = (int)timeRanSeconds/60;
                 int seconds = (int)timeRanSeconds%60;
                 String sec = "";
@@ -323,9 +317,14 @@ public class TrackingActivity extends AppCompatActivity
                 String miles = String.format("%.3f", milesRan);
                 //calc split
                 String paceinfo = "";
-                if(milesRan != 0){
-                    double minpermile = (timeRanSeconds/60)/milesRan;
-                    paceinfo += "at a pace of "+minpermile+" minutes per mile";
+                System.out.println("time ran secs "+timeRanSeconds);
+                System.out.println("time ran mins "+timeRanSeconds/60);
+                System.out.println("pace "+(timeRanSeconds/60)/milesRan);
+                System.out.println("dis "+milesRan);
+                double minpermile = (timeRanSeconds/60)/milesRan;
+                String split = String.format("%.3f", minpermile);
+                if(milesRan > 0){
+                    paceinfo += "with a run split of "+split+" minutes per mile";
                 }
                 //display run data in a dialog
                 AlertDialog dialog = new AlertDialog.Builder(c).create();

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 
 public class ExerciseFragment extends Fragment {
+
+    private static final String TAG ="ExerciseFragment";
 
     ExerciseFragmentListener m_ExerciseFragmentListener;
     Context m_Context;
@@ -45,7 +48,10 @@ public class ExerciseFragment extends Fragment {
         // Retrieve string from bundle
         Bundle bundle = this.getArguments();
         String exercise_info = bundle.getString("ex_name");
+
         listview_index = bundle.getInt("index_bun");
+
+        Log.i(TAG, "onCreateView retrieved bundle arguments");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
@@ -77,6 +83,7 @@ public class ExerciseFragment extends Fragment {
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "completeButton onClick passing index = " + listview_index);
                 m_ExerciseFragmentListener.markExerciseComplete(listview_index);
             }
         });

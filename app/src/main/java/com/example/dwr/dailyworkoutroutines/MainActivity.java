@@ -1,6 +1,7 @@
 package com.example.dwr.dailyworkoutroutines;
 
 import android.Manifest;
+import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.icu.text.IDNA;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity
     ListFragment m_ListFragment;
     ExerciseFragment m_ExerciseFragment;
 
+    ArrayList<Integer> m_CompletedExercises;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +71,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //* <---------------------- Continue OnCreate ---------------------->*//*
+        m_CompletedExercises = new ArrayList<>();
+
         m_ListFragment = new ListFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().add(R.id.container, m_ListFragment, "List");
         fragmentTransaction.commit();
@@ -201,6 +206,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void goToExercise(String name, int index) {
+        Log.i(TAG, "in goToExercise setting bundle with: " + name + ", " + index);
+
         Bundle extras = new Bundle();
         extras.putString("ex_name", name);
         extras.putInt("index_bun", index);
@@ -212,9 +219,21 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void markExerciseComplete(int index) {
+        Log.i(TAG, "in markExerciseComplete with index = " + index);
         m_ListFragment = new ListFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.container, m_ListFragment, "List");
         fragmentTransaction.commit();
-        m_ListFragment.updateCheckedExercise(index);
+
+        Log.i(TAG, "m_CompletedExercises.add -> " + index);
+        m_CompletedExercises.add(Integer.valueOf(index));
+
+        Log.i(TAG, "Printing elements in m_CompletedExercises");
+        for(int i = 0; i < m_CompletedExercises.size(); i++){
+            System.out.print(m_CompletedExercises.get(i) + " ");
+        }
+        Log.i(TAG, "m_CompletedExercises.size() = " + m_CompletedExercises.size());
+
+        Log.i(TAG, "Calling updateCompletedExercises in ListFragment");
+        m_ListFragment.updateCompletedExercises(m_CompletedExercises);
     }
 }

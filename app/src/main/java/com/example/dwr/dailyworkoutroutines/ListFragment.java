@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,6 +33,9 @@ public class ListFragment extends Fragment {
     // UI variables
     TextView date_TV;
     TextView todayworkoutTV;
+    TextView progressTV;
+    ProgressBar progressBar;
+    int progress_val = 0;
 
     ListView m_exercisesLV;
     ArrayList<String> m_exerciseArrayList;
@@ -39,6 +43,10 @@ public class ListFragment extends Fragment {
 
     // All exercise information to parse
     ArrayList<String> m_exerciseInfoArrayList;
+
+    // Completed exercises index
+    ArrayList<Integer> m_CompletedExercises;
+
 
 
     public ListFragment() {
@@ -59,6 +67,9 @@ public class ListFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_list, container, false);
 
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressTV = (TextView) view.findViewById(R.id.progressTV);
+
         todayworkoutTV = (TextView) view.findViewById(R.id.workout_title_TV);
 
         date_TV = (TextView) view.findViewById(R.id.dateTV);
@@ -73,14 +84,45 @@ public class ListFragment extends Fragment {
                 String exercise_name = m_exercisesLV.getItemAtPosition(position).toString();
                 String infoStr = m_exerciseInfoArrayList.get(position);
 
-                System.out.println("goToExercise fragment");
-
+                Log.i(TAG, "m_exerciseLV onitem click listener goToExercise(string, index) = " + infoStr + ", " + position);
                 // Pass workout name, sets, reps, weight
                 m_ListFragmentListener.goToExercise(infoStr, position);
             }
         });
 
-       return view;
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
+        if(m_CompletedExercises != null && m_exerciseArrayList != null){
+            Log.i(TAG, "none arraylist are null now setting progress");
+            Log.i(TAG,"The updated progres should be " + (m_CompletedExercises.size()/m_exerciseArrayList.size()) * 100);
+            progressBar.setProgress((m_CompletedExercises.size()/m_exerciseArrayList.size()) * 100);
+        }
+        progressBar.setProgress(progress_val);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.i(TAG,"onResume");
+
+        if(m_CompletedExercises != null && m_exerciseArrayList != null){
+            Log.i(TAG,"m_CompletedExercises and m_exercisesArrayList != null which is good");
+            Log.i(TAG, "m_CompletedExercises.size = " + m_CompletedExercises.size());
+            Log.i(TAG, "m_exercisesArrayList.size = " + m_exerciseArrayList.size());
+            Log.i(TAG,"The updated progres should be " + (m_CompletedExercises.size() * 100 / m_exerciseArrayList.size()));
+            progress_val = m_CompletedExercises.size() * 100 / m_exerciseArrayList.size();
+            progressBar.setProgress(progress_val);
+            progressTV.setText("Workout Completion: " + progress_val + "%");
+        }else{
+            Log.i(TAG,"null ArrayLists in onResume");
+        }
+        Log.i(TAG, "end onResume");
     }
 
     public void displayDate() {
@@ -107,9 +149,9 @@ public class ListFragment extends Fragment {
             int indexer = 0;
             while (result.moveToNext()) {
                 if(result.getString(result.getColumnIndex(day)).equals("")){
-                    Log.d(TAG, "viewDay: NOTHING HERE");
+                    //Log.d(TAG, "viewDay: NOTHING HERE");
                 }else {
-                    Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer]);
+                    //Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer]);
                     m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer]);
                     m_exerciseInfoArrayList.add(getResources().getStringArray(R.array.workouts)[indexer] + "," + result.getString(result.getColumnIndex(day)));
                 }
@@ -128,13 +170,11 @@ public class ListFragment extends Fragment {
     }
 
 
-    public void updateCheckedExercise(int index){
-        System.out.println("This is the index!!!" + index);
-        if(view == null){
-            System.out.println("View is still null");
-        }else{
-            m_exercisesLV.setItemChecked(index, true);
-        }
+    public void updateCompletedExercises(ArrayList<Integer> completed){
+        Log.i(TAG, "in updateCompletedExercises");
+        m_CompletedExercises = new ArrayList<Integer>();
+        m_CompletedExercises = completed;
+        Log.i(TAG, "m_CompletedExercises.size() = " + m_CompletedExercises.size());
     }
 
     @Override

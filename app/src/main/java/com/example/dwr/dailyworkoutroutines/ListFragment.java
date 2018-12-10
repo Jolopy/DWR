@@ -24,6 +24,8 @@ public class ListFragment extends Fragment {
 
     DatabaseHelper db;
 
+    View view;
+
     ListFragmentListener m_ListFragmentListener;
     Context m_Context;
 
@@ -35,13 +37,16 @@ public class ListFragment extends Fragment {
     ArrayList<String> m_exerciseArrayList;
     ArrayAdapter<String> m_adapter;
 
+    // All exercise information to parse
+    ArrayList<String> m_exerciseInfoArrayList;
+
 
     public ListFragment() {
         // Required empty public constructor
     }
 
     public interface ListFragmentListener{
-        public void goToExercise(String name);
+        public void goToExercise(String name, int index);
 
     }
 
@@ -52,7 +57,7 @@ public class ListFragment extends Fragment {
         db = new DatabaseHelper(getContext());
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        view = inflater.inflate(R.layout.fragment_list, container, false);
 
         todayworkoutTV = (TextView) view.findViewById(R.id.workout_title_TV);
 
@@ -66,13 +71,12 @@ public class ListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Go to exercise
                 String exercise_name = m_exercisesLV.getItemAtPosition(position).toString();
-
-                System.out.println("Clicked List View Item!");
-                System.out.println(exercise_name);
-
+                String infoStr = m_exerciseInfoArrayList.get(position);
 
                 System.out.println("goToExercise fragment");
-                m_ListFragmentListener.goToExercise(exercise_name);
+
+                // Pass workout name, sets, reps, weight
+                m_ListFragmentListener.goToExercise(infoStr, position);
             }
         });
 
@@ -93,7 +97,8 @@ public class ListFragment extends Fragment {
     public void viewDay(String day) {
         // Stores just the exercise names for the current day
         m_exerciseArrayList = new ArrayList<String>();
-        // Stores Workout objects so I can get sets, reps of specific exercise clicked in list view
+        // Stores entire exercise string for sets, reps of specific exercise clicked in list view
+        m_exerciseInfoArrayList = new ArrayList<String>();
 
         if(db == null){
             todayworkoutTV.setText("No Workouts Today");
@@ -106,6 +111,7 @@ public class ListFragment extends Fragment {
                 }else {
                     Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer]);
                     m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer]);
+                    m_exerciseInfoArrayList.add(getResources().getStringArray(R.array.workouts)[indexer] + "," + result.getString(result.getColumnIndex(day)));
                 }
                 indexer++;
             }
@@ -114,45 +120,21 @@ public class ListFragment extends Fragment {
                 todayworkoutTV.setText("No Workouts Today");
 
             }else{
-                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
+                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_single_choice, m_exerciseArrayList);
                 m_exercisesLV.setAdapter(m_adapter);
             }
 
         }
-
-
-        /*
-        while (result.moveToNext()) {
-            if(result.getString(result.getColumnIndex(day)).equals("")){
-                Log.d(TAG, "viewDay: NOTHING HERE");
-
-            }else {
-
-                // ** Need Workout Object into ArrayList today here
-                // not sure how to do that
-                Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer]);
-                m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer]);
-                // ** Need just the exercise name into ArrayList m_exerciseArrayList here
-                //m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer] + ": "  + result.getString(result.getColumnIndex(day)));
-            }
-            indexer++;
-        }
-        if(m_exerciseArrayList.size() == 0 ){
-            Log.d(TAG, "viewDay: Nothing in here nub");
-            todayworkoutTV.setText("No Workouts Today");
-
-        }else{
-            m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
-            m_exercisesLV.setAdapter(m_adapter);
-        } */
     }
 
-    public void getExercises(){
-        // contactArrayList = dbHandler.getContactsArrayList();
-        m_exerciseArrayList = new ArrayList<String>();
-        m_exerciseArrayList.add("Dips"); m_exerciseArrayList.add("Push-ups"); m_exerciseArrayList.add("Leg Curls"); m_exerciseArrayList.add("Jump Roping");
-        m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
-        m_exercisesLV.setAdapter(m_adapter);
+
+    public void updateCheckedExercise(int index){
+        System.out.println("This is the index!!!" + index);
+        if(view == null){
+            System.out.println("View is still null");
+        }else{
+            m_exercisesLV.setItemChecked(index, true);
+        }
     }
 
     @Override

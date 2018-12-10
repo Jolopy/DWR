@@ -200,13 +200,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void goToExercise(String name) {
-        Bundle bundle = new Bundle();
-        bundle.putString("ex_name", name);
+    public void goToExercise(String name, int index) {
+        Bundle extras = new Bundle();
+        extras.putString("ex_name", name);
+        extras.putInt("index_bun", index);
         m_ExerciseFragment = new ExerciseFragment();
-        m_ExerciseFragment.setArguments(bundle);
+        m_ExerciseFragment.setArguments(extras);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.container, m_ExerciseFragment, "Exercise").addToBackStack(null);
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void markExerciseComplete(int index) {
+        m_ListFragment = new ListFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.container, m_ListFragment, "List");
+        fragmentTransaction.commit();
+        m_ListFragment.updateCheckedExercise(index);
+    }
 }

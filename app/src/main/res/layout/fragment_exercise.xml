@@ -14,7 +14,7 @@
         android:layout_marginTop="20dp"
         android:text="Exercise: "
         android:textStyle="bold"
-        android:textSize="14sp" />
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/setsTV"
@@ -24,60 +24,88 @@
         android:layout_marginTop="10dp"
         android:text="Sets:"
         android:textStyle="bold"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/repsTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="Reps:"
         android:textStyle="bold"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/weightTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="Weight:"
         android:textStyle="bold"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <Chronometer
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
         android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/timerTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Timer for your convenience. Use to time rest periods or elapsed time."
+        android:textStyle="italic"
+        android:textSize="10sp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:layout_gravity="center">
 
         <Button
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_gravity="center"
             android:text="Start"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/endButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="Stop"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:text="Reset"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/completeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginTop="80dp"
+        android:text="Mark Complete"
+        android:textStyle="bold" />
 
 
 </LinearLayout>

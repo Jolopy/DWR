@@ -25,6 +25,9 @@ public class ExerciseFragment extends Fragment {
     Chronometer timer;
     Button startButton;
     Button stopButton;
+    Button completeButton;
+
+    int listview_index;
 
 
     public ExerciseFragment() {
@@ -32,7 +35,7 @@ public class ExerciseFragment extends Fragment {
     }
 
     public interface ExerciseFragmentListener{
-
+        public void markExerciseComplete(int index);
     }
 
 
@@ -41,15 +44,13 @@ public class ExerciseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Retrieve string from bundle
         Bundle bundle = this.getArguments();
-        String exercise_name = bundle.getString("ex_name");
-
+        String exercise_info = bundle.getString("ex_name");
+        listview_index = bundle.getInt("index_bun");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
 
         name = (TextView) view.findViewById(R.id.nameTV);
-        name.setText(exercise_name);
-
         sets = (TextView) view.findViewById(R.id.setsTV);
         reps = (TextView) view.findViewById(R.id.repsTV);
         weight = (TextView) view.findViewById(R.id.weightTV);
@@ -72,7 +73,46 @@ public class ExerciseFragment extends Fragment {
             }
         });
 
+        completeButton = (Button) view.findViewById(R.id.completeButton);
+        completeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                m_ExerciseFragmentListener.markExerciseComplete(listview_index);
+            }
+        });
+
+
+
+        // Parse and display exercise TextView info
+        splitString(exercise_info);
+
         return view;
+    }
+
+    public void splitString(String info){
+        // Parse exercise_info here
+        String[] parses = info.split("\\s*,\\s*");
+
+        // Exercise name ***
+        String exercise_name = parses[0];
+        name.setText(exercise_name);
+
+        String rest = parses[1];
+        String parts[] = rest.split(" ", 2);
+
+        String setsAndreps = parts[0];
+        String[] sets_reps = setsAndreps.split("x");
+        String actual_sets = sets_reps[1];
+        sets.setText("Sets: " + actual_sets);
+        String actual_reps = sets_reps[0];
+        reps.setText("Reps: " + actual_reps);
+
+        String lbsWeight = parts[1];
+        String parse_weight[] = lbsWeight.split(" ", 2);
+
+        // String weight ***
+        String actual_weight = parse_weight[1];
+        weight.setText("Weight: " + actual_weight);
     }
 
 

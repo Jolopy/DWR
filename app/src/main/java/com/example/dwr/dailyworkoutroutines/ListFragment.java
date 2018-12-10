@@ -120,7 +120,7 @@ public class ListFragment extends Fragment {
                 todayworkoutTV.setText("No Workouts Today");
 
             }else{
-                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_single_choice, m_exerciseArrayList);
+                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
                 m_exercisesLV.setAdapter(m_adapter);
             }
 

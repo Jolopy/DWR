@@ -520,20 +520,23 @@ public class RoutinesActivity extends AppCompatActivity
     }
     public void viewDay(String day) {
         today = new ArrayList<Workout>();
-        Cursor result = db.getDay(day);
-        while (result.moveToNext()) {
-            if(result.getString(result.getColumnIndex(day)).equals("")){
-                //Log.d(TAG, "viewDay: NOTHING HERE");
-                
-            }else {
-                //Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer] + "  REPS SETS:" + result.getString(result.getColumnIndex(day)));
-                adapter2.add(getResources().getStringArray(R.array.workouts)[indexer] + ": "  + result.getString(result.getColumnIndex(day)));
+        if(db == null) {
+            Log.d(TAG, "viewDay: Do nothing");
+        }else{
+            Cursor result = db.getDay(day);
+            while (result.moveToNext()) {
+                if(result.getString(result.getColumnIndex(day)).equals("")){
+                    //Log.d(TAG, "viewDay: NOTHING HERE");
 
+                }else {
+                    //Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer] + "  REPS SETS:" + result.getString(result.getColumnIndex(day)));
+                    adapter2.add(getResources().getStringArray(R.array.workouts)[indexer] + ": "  + result.getString(result.getColumnIndex(day)));
+
+                }
+                indexer++;
             }
-            indexer++;
+            workoutDayList.setAdapter(adapter2);
         }
-        workoutDayList.setAdapter(adapter2);
-
     }
 }
 

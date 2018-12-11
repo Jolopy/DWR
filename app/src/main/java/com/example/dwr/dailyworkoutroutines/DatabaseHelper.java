@@ -85,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(COL_7, "");
             long result = db.insert(TABLE_NAME_SCHEDULE, null, contentValues);
         }
-        Toast.makeText(context, "Table Made", Toast.LENGTH_LONG).show();//i think this shit just displays
+        //Toast.makeText(context, "Table Made", Toast.LENGTH_LONG).show();//i think this shit just displays
     }
 
     @Override

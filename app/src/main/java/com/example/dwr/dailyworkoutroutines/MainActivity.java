@@ -225,7 +225,22 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
 
         Log.i(TAG, "m_CompletedExercises.add -> " + index);
-        m_CompletedExercises.add(Integer.valueOf(index));
+        if(m_CompletedExercises == null){
+            m_CompletedExercises.add(Integer.valueOf(index));
+        }else{
+            boolean flag = false;
+            for(int j = 0; j < m_CompletedExercises.size(); j++){
+                if(m_CompletedExercises.get(j) == index){
+                    flag = true;
+                }
+            }
+            if(!flag){
+                m_CompletedExercises.add(index);
+            }
+            else{
+                Toast.makeText(this,"Already completed this exercise", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         Log.i(TAG, "Printing elements in m_CompletedExercises");
         for(int i = 0; i < m_CompletedExercises.size(); i++){

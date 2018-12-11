@@ -119,6 +119,14 @@ public class ListFragment extends Fragment {
             progress_val = m_CompletedExercises.size() * 100 / m_exerciseArrayList.size();
             progressBar.setProgress(progress_val);
             progressTV.setText("Workout Completion: " + progress_val + "%");
+
+            m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_checked, m_exerciseArrayList);
+            m_exercisesLV.setAdapter(m_adapter);
+
+            for(int i = 0; i < m_CompletedExercises.size(); i++){
+                m_exercisesLV.setItemChecked(i, true);
+            }
+
         }else{
             Log.i(TAG,"null ArrayLists in onResume");
         }
@@ -162,7 +170,7 @@ public class ListFragment extends Fragment {
                 todayworkoutTV.setText("No Workouts Today");
 
             }else{
-                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_multiple_choice, m_exerciseArrayList);
+                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_checked, m_exerciseArrayList);
                 m_exercisesLV.setAdapter(m_adapter);
             }
 

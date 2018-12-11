@@ -3,6 +3,7 @@ package com.example.dwr.dailyworkoutroutines;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class ExerciseFragment extends Fragment {
     Button startButton;
     Button stopButton;
     Button completeButton;
+    Button resetButton;
 
     int listview_index;
 
@@ -85,6 +87,14 @@ public class ExerciseFragment extends Fragment {
             public void onClick(View v) {
                 Log.i(TAG, "completeButton onClick passing index = " + listview_index);
                 m_ExerciseFragmentListener.markExerciseComplete(listview_index);
+            }
+        });
+
+        resetButton = (Button) view.findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timer.setBase(SystemClock.elapsedRealtime());
             }
         });
 

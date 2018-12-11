@@ -17,6 +17,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -46,6 +49,8 @@ public class ListFragment extends Fragment {
 
     // Completed exercises index
     ArrayList<Integer> m_CompletedExercises;
+
+    public int counter = 0;
 
 
 
@@ -120,12 +125,13 @@ public class ListFragment extends Fragment {
             progressBar.setProgress(progress_val);
             progressTV.setText("Workout Completion: " + progress_val + "%");
 
-            m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_checked, m_exerciseArrayList);
-            m_exercisesLV.setAdapter(m_adapter);
+            //m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_checked, m_exerciseArrayList);
+            //m_exercisesLV.setAdapter(m_adapter);
 
-            for(int i = 0; i < m_CompletedExercises.size(); i++){
-                m_exercisesLV.setItemChecked(i, true);
-            }
+            //for(int i = 0; i < m_CompletedExercises.size(); i++){
+            //    m_exercisesLV.setItemChecked(i, true);
+
+            //}
 
         }else{
             Log.i(TAG,"null ArrayLists in onResume");
@@ -159,22 +165,47 @@ public class ListFragment extends Fragment {
                 if(result.getString(result.getColumnIndex(day)).equals("")){
                     //Log.d(TAG, "viewDay: NOTHING HERE");
                 }else {
-                    //Log.d(TAG, "viewDay: Workout name:" + getResources().getStringArray(R.array.workouts)[indexer]);
+                    //m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer] + " - DONE")
                     m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer]);
+                    //m_exerciseArrayList.add(getResources().getStringArray(R.array.workouts)[indexer]);
                     m_exerciseInfoArrayList.add(getResources().getStringArray(R.array.workouts)[indexer] + "," + result.getString(result.getColumnIndex(day)));
                 }
                 indexer++;
             }
+
             if(m_exerciseArrayList.size() == 0 ){
                 Log.d(TAG, "viewDay: Nothing in here nub");
                 todayworkoutTV.setText("No Workouts Today");
 
             }else{
-                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_checked, m_exerciseArrayList);
+                m_adapter = new ArrayAdapter<String>(m_Context, android.R.layout.simple_list_item_1, m_exerciseArrayList);
                 m_exercisesLV.setAdapter(m_adapter);
             }
 
         }
+        if(m_CompletedExercises != null){
+            Collections.sort(this.m_CompletedExercises);
+            for(int i  = 0; i < m_CompletedExercises.size(); i++){
+                int indexLul = m_CompletedExercises.get(i);
+                String newInput =  m_exerciseArrayList.get(indexLul);
+                m_exerciseArrayList.set(indexLul,newInput + " - DONE");
+                m_adapter.notifyDataSetChanged();
+
+            }
+        }
+
+        /*if(m_CompletedExercises != null){
+            Collections.sort(this.m_CompletedExercises);
+            for(int i  = 0; i < m_CompletedExercises.size(); i++){
+                if(i == m_CompletedExercises.get(counter)){
+                    String newInput =  m_exerciseArrayList.get(i);
+                    m_exerciseArrayList.set(i,newInput + " - DONE");
+                    m_adapter.notifyDataSetChanged();
+                    counter++;
+                }
+            }
+        }*/
+        counter = 0;
     }
 
 
